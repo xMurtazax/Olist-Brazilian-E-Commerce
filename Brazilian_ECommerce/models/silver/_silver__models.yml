@@ -1,0 +1,66 @@
+version: 2
+
+models:
+
+  - name: sellers          # yeh .sql file ke naam se EXACT match hona chahiye
+    config:
+      enabled: false
+    columns:
+      - name: seller_id
+        data_tests: [not_null, unique]
+
+  - name: orders
+    config:
+      enabled: true
+    columns:
+      - name: order_id
+        data_tests: [not_null, unique]
+  
+  - name: order_items
+    config:
+      enabled: false
+    columns:
+      - name: order_item_id
+        data_tests: [not_null, unique]
+  
+  - name: order_payments
+    config:
+      enabled: false
+    columns:
+      - name: order_id
+        data_tests: [not_null, unique]
+
+  - name: order_reviews
+    config:
+      enabled: false
+    columns:
+      - name: review_id
+        data_tests: [not_null, unique]
+
+  - name: customers
+    config:
+      enabled: false
+    columns:
+      - name: customer_id
+        data_tests: [not_null, unique]
+  
+  - name: products
+    config:
+      enabled: false
+    columns:
+      - name: product_id
+        data_tests: [not_null, unique]
+  
+  - name: prod_category_name_translation          # yeh .sql file ke naam se EXACT match hona chahiye
+    config:
+      enabled: false
+    columns:
+      - name: product_category_name
+        data_tests: [not_null, unique]
+  
+  - name: geolocation
+    config:
+      enabled: false
+    columns:
+      - name: geolocation_zip_code_prefix
+        data_tests: [not_null, unique]
