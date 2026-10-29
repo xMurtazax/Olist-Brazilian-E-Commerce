@@ -4,11 +4,11 @@ models:
 
   - name: sellers          # yeh .sql file ke naam se EXACT match hona chahiye
     config:
-      enabled: false
+      enabled: true
     columns:
       - name: seller_id
         data_tests: [not_null, unique]
-
+  
   - name: orders
     config:
       enabled: true
@@ -18,49 +18,58 @@ models:
   
   - name: order_items
     config:
-      enabled: false
-    columns:
-      - name: order_item_id
-        data_tests: [not_null, unique]
+      enabled: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_item_id
+            - order_id
   
   - name: order_payments
     config:
-      enabled: false
+      enabled: true
     columns:
       - name: order_id
         data_tests: [not_null, unique]
-
+  
   - name: order_reviews
     config:
-      enabled: false
+      enabled: true
     columns:
       - name: review_id
+        data_tests: [not_null, unique]
+      - name: order_id
         data_tests: [not_null, unique]
 
   - name: customers
     config:
-      enabled: false
+      enabled: true
     columns:
       - name: customer_id
         data_tests: [not_null, unique]
   
   - name: products
     config:
-      enabled: false
+      enabled: true
     columns:
       - name: product_id
         data_tests: [not_null, unique]
+      - name: product_category_name
+        data_tests:
+          - relationships:
+              to: ref('prod_category_name_translation')
+              field: product_category_name
   
   - name: prod_category_name_translation          # yeh .sql file ke naam se EXACT match hona chahiye
     config:
-      enabled: false
+      enabled: true
     columns:
       - name: product_category_name
         data_tests: [not_null, unique]
   
   - name: geolocation
     config:
-      enabled: false
+      enabled: true
     columns:
       - name: geolocation_zip_code_prefix
         data_tests: [not_null, unique]

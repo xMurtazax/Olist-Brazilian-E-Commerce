@@ -5,9 +5,9 @@ with source as (
 cleaned as (
     select
         trim(seller_id)                              as seller_id,
-        lpad(cast(seller_zip_code_prefix as string), 5, '0') as zip_code_prefix,
-        initcap(trim(seller_city))                   as city,
-        upper(trim(seller_state))                    as state
+        seller_zip_code_prefix                       as zip_code_prefix,
+        initcap(trim(seller_city))                   as seller_city,
+        upper(trim(seller_state))                    as seller_state
     from source
 ),
 
