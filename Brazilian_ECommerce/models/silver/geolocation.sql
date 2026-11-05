@@ -4,10 +4,11 @@ with source as (
 
 select
 
-    geolocation_zip_code_prefix     as geolocation_zip_code_prefix,
-    geolocation_lat                 as geolocation_lat,
-    geolocation_lng                 as geolocation_lng,
-    trim(geolocation_city)          as geolocation_city,
-    trim(geolocation_state)         as geolocation_state
+    geolocation_zip_code_prefix,
+    avg(geolocation_lat)                 as geolocation_lat,
+    avg(geolocation_lng)                 as geolocation_lng,
+    max(trim(geolocation_city))          as geolocation_city,
+    max(trim(geolocation_state))         as geolocation_state
 
 from source
+group by geolocation_zip_code_prefix

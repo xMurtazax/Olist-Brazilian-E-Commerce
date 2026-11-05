@@ -5,7 +5,7 @@ with source as (
 cleaned as (
     select
         trim(seller_id)                              as seller_id,
-        seller_zip_code_prefix                       as zip_code_prefix,
+        seller_zip_code_prefix                       as seller_zip_code_prefix,
         initcap(trim(seller_city))                   as seller_city,
         upper(trim(seller_state))                    as seller_state
     from source

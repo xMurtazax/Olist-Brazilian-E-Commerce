@@ -1,6 +1,7 @@
 with source as (
     select * from {{ source('bronze', 'order_items') }}
 )
+
 select
 
     trim(order_id)          as order_id,

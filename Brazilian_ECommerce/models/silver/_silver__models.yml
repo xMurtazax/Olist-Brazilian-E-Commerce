@@ -3,73 +3,111 @@ version: 2
 models:
 
   - name: sellers          # yeh .sql file ke naam se EXACT match hona chahiye
-    config:
-      enabled: true
     columns:
       - name: seller_id
         data_tests: [not_null, unique]
   
   - name: orders
-    config:
-      enabled: true
     columns:
       - name: order_id
         data_tests: [not_null, unique]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('customers')
+                field: customer_id
+      - name: order_status
+        data_tests:
+          - accepted_values:
+              values: ['delivered','shipped','canceled','unavailable',
+                       'invoiced','processing','created','approved']
   
   - name: order_items
-    config:
-      enabled: true
     data_tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - order_item_id
-            - order_id
+          combination_of_columns: [order_id, order_item_id]
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('orders')
+                field: order_id
+      - name: product_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('products')
+                field: product_id
+      - name: seller_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('sellers')
+                field: seller_id
+      - name: price
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
   
   - name: order_payments
-    config:
-      enabled: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [order_id, payment_sequential]
     columns:
       - name: order_id
-        data_tests: [not_null, unique]
+        data_tests: [not_null]
   
   - name: order_reviews
-    config:
-      enabled: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [review_id, order_id]
     columns:
       - name: review_id
-        data_tests: [not_null, unique]
+        data_tests: [not_null]
       - name: order_id
-        data_tests: [not_null, unique]
-
+        data_tests: [not_null]
+      - name: review_score
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 5
+  
   - name: customers
-    config:
-      enabled: true
     columns:
       - name: customer_id
         data_tests: [not_null, unique]
+      - name: customer_unique_id
+        data_tests: [not_null]
+      - name: customer_zip_code_prefix
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('geolocation')
+                field: geolocation_zip_code_prefix
+                config:
+                  severity: warn
   
   - name: products
-    config:
-      enabled: true
     columns:
       - name: product_id
         data_tests: [not_null, unique]
       - name: product_category_name
         data_tests:
           - relationships:
-              to: ref('prod_category_name_translation')
-              field: product_category_name
+              arguments:
+                to: ref('prod_category_name_translation')
+                field: product_category_name
   
-  - name: prod_category_name_translation          # yeh .sql file ke naam se EXACT match hona chahiye
-    config:
-      enabled: true
+  - name: prod_category_name_translation
     columns:
       - name: product_category_name
         data_tests: [not_null, unique]
   
   - name: geolocation
-    config:
-      enabled: true
     columns:
       - name: geolocation_zip_code_prefix
         data_tests: [not_null, unique]
